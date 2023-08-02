@@ -120,7 +120,7 @@ class Process(object):
         self.close()    #the thread stays in the process
         self.open()     #just for better code understanding
 
-    def read(self, lp_base_address: int) -> Any:
+    def read(self, lp_base_address: int, read_buffer: ctypes = None) -> Any:
         """
         Read data from the process's memory.
 
@@ -129,7 +129,7 @@ class Process(object):
         :return: The data from the process's memory if succeed if not raises an exception.
         """
         try:
-            read_buffer = ctypes.c_uint()
+            read_buffer = ctypes.c_uint() if read_buffer == None else read_buffer
             lp_buffer = ctypes.byref(read_buffer)
             n_size = ctypes.sizeof(read_buffer)
             lp_number_of_bytes_read = ctypes.c_ulong(0)
@@ -193,7 +193,7 @@ class Process(object):
                      'Name': self.name, 'ErrorCode': self.error_code}
             ReadWriteMemoryError(error)
 
-    def write(self, lp_base_address: int, value: int) -> bool:
+    def write(self, lp_base_address: int, value: int, write_buffer: ctypes = None) -> bool:
         """
         Write data to the process's memory.
 
@@ -203,7 +203,7 @@ class Process(object):
         :return: It returns True if succeed if not it raises an exception.
         """
         try:
-            write_buffer = ctypes.c_uint(value)
+            write_buffer = ctypes.c_uint(value)  if write_buffer == None else write_buffer
             lp_buffer = ctypes.byref(write_buffer)
             n_size = ctypes.sizeof(write_buffer)
             lp_number_of_bytes_written = ctypes.c_ulong(0)
